@@ -55,12 +55,39 @@ with tab2:
 # Safety Classification Tab
 with tab3:
     st.header("Safety Classification")
-    food_group_name = st.text_input("Enter Food Group", key="s1")
-    contaminant= st.text_input("Enter Contaminant", key="s2")
-    contaminant_quantity= st.number_input("Enter Quantity of Contaminant", key="s3")
+    # Define dropdown options
+food_groups = [
+    "Legumes and pulses",
+    "Fish and other seafood (including amphibians, reptiles, snails and insects)",
+    "Vegetables and vegetable products (including fungi)",
+    "Starchy roots and tubers",
+    "Milk and dairy products",
+    "Meat and meat products (including edible offal)",
+    "Fruit and fruit products",
+    "Eggs and egg products"
+]
+
+contaminants = [
+    "Ethyl carbamate", "Other", "Cesium 134", "Cesium 137", "Iodine 131",
+    "Cesium total", "Dioxins (WHO TEFs)", "Dioxin like PCBs (WHO TEFs)", "Lead",
+    "Cadmium", "Aflatoxin (total)", "Aflatoxin G1", "Aflatoxin G2", "Tin",
+    "Aflatoxin B2", "Copper", "Mercury", "Fumonisin B1", "Patulin", "Nitrite",
+    "Aflatoxin M1", "Arsenic (total)", "Aflatoxin B1", "Arsenic (inorganic)",
+    "Deoxynivalenol", "3-Chloro-1,2-propanediol", "Ochratoxin A", "Zearalenone",
+    "Hexachlorobenzene", "Hexachlorocyclohexanes (HCH)", "Fumonisin B2",
+    "Fumonisin B3", "Pyrrolizidine alkaloids", "Methyl mercury"
+]
+
+food_group_name = st.selectbox("Select Food Group", food_groups, key="s1")
+contaminant = st.selectbox("Select Contaminant", contaminants, key="s2")
+contaminant_quantity= st.number_input("Enter Quantity of Contaminant", key="s3")
    
 
     if st.button("Predict Safety", key="btn_s"):
-        user_input = np.array([[feature1, feature2, feature3]])
+      user_input = {
+    
+    'FoodGroupName': food_group_name,
+    'Contaminant': contaminant,
+    'ContaminantQuantity':contaminant_quantity}
         safety_pred = safety.predict(user_input)
        
