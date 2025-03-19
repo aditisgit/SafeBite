@@ -3,9 +3,9 @@ from joblib import load
 import numpy as np
 
 # Load saved models
-adulteration = load(r"Models\adulteration-prediction-model.joblib") 
-contamination = load(r"Models\contamination-prediction-model.joblib")
-safety = load(r"Models\safety-classification-kmeans.joblib")
+adulteration = load(r"Deployment\Models\adulteration-prediction-model.joblib") 
+contamination = load(r"Deployment\Models\contamination-prediction-model.joblib")
+safety = load(r"Deployment\Models\safety-classification-kmeans.joblib")
 
 # Streamlit UI
 st.title("Food Adulteration & Contamination Detection")
