@@ -24,8 +24,8 @@ tab1, tab2, tab3 = st.tabs(["Adulteration Prediction", "Contaminant Level Predic
 # Adulteration Prediction Tab
 with tab1:
     st.header("Adulteration Prediction")
-    feature1 = st.number_input("Enter feature 1", key="a1")
-    feature2 = st.number_input("Enter feature 2", key="a2")
+    feature1 = st.text_input("Enter feature 1", key="a1")
+    feature2 = st.text_input("Enter feature 2", key="a2")
     feature3 = st.number_input("Enter feature 3", key="a3")
     feature4 = st.number_input("Enter feature 4", key="a4")
 
@@ -37,10 +37,10 @@ with tab1:
 # Contaminant Level Prediction Tab
 with tab2:
     st.header("Contaminant Level Prediction")
-    country = st.number_input("Enter Country", key="c1")
-    foodgroupname=st.number_input("Enter Food Group", key="c2")
-    foodname= st.number_input("Enter Food Name", key="c3")
-    contaminantname= st.number_input("Enter Contaminant Name", key="c4")
+    country = st.text_input("Enter Country", key="c1")
+    foodgroupname=st.text_input("Enter Food Group", key="c2")
+    foodname= st.text_input("Enter Food Name", key="c3")
+    contaminantname= st.text_input("Enter Contaminant Name", key="c4")
 
 
     if st.button("Predict Contaminant Level", key="btn_c"):
@@ -55,8 +55,8 @@ with tab2:
 # Safety Classification Tab
 with tab3:
     st.header("Safety Classification")
-    food_group_name = st.number_input("Enter Food Group", key="s1")
-    contaminant= st.number_input("Enter Contaminant", key="s2")
+    food_group_name = st.text_input("Enter Food Group", key="s1")
+    contaminant= st.text_input("Enter Contaminant", key="s2")
     contaminant_quantity= st.number_input("Enter Quantity of Contaminant", key="s3")
    
 
