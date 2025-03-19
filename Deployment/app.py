@@ -88,5 +88,5 @@ if st.button("Predict Safety", key="btn_s"):
      'FoodGroupName': food_group_name,
      'Contaminant': contaminant,
      'ContaminantQuantity':contaminant_quantity}
-     safety_pred = safety.predict(user_input)
+      safety_pred = safety.predict(user_input)
        
