@@ -1,6 +1,7 @@
 import streamlit as st
 from joblib import load
 import numpy as np
+import pandas as pd
 import os
 
 def find_file(filename, directory="."):
@@ -37,20 +38,47 @@ with tab1:
 # Contaminant Level Prediction Tab
 with tab2:
     st.header("Contaminant Level Prediction")
-    country = st.text_input("Enter Country", key="c1")
-    foodgroupname=st.text_input("Enter Food Group", key="c2")
-    foodname= st.text_input("Enter Food Name", key="c3")
-    contaminantname= st.text_input("Enter Contaminant Name", key="c4")
+    countryName = country_name = st.selectbox("Country Name", 
+                                              ['HONG KONG SAR', 'Japan', 'China', 'Singapore', 'Thailand',
+                                                'India', 'Republic of Korea', 'Indonesia'])
+    
+    foodGroupName=st.selectbox("Food Group Name",
+                               ['Legumes and pulses',
+                                'Fish and other seafood (including amphibians, reptiles, snails and insects)',
+                                'Vegetables and vegetable products (including fungi)',
+                                'Starchy roots and tubers', 
+                                'Milk and dairy products',
+                                'Meat and meat products (including edible offal)',
+                                'Fruit and fruit products', 
+                                'Eggs and egg products'])
+    
+    foodname= st.text_input("Food Name", key="c3")
+    
+    contaminantname= st.selectbox("Contaminant Name", 
+                                  ['Ethyl carbamate', 'Other', 'Cesium 134', 'Cesium 137',
+                                    'Iodine 131', 'Cesium total', 'Dioxins (WHO TEFs)',
+                                    'Dioxin like PCBs (WHO TEFs)', 'Lead', 'Cadmium',
+                                    'Aflatoxin (total)', 'Aflatoxin G1', 'Aflatoxin G2', 'Tin',
+                                    'Aflatoxin B2', 'Copper', 'Mercury', 'Fumonisin B1', 'Patulin',
+                                    'Nitrite', 'Aflatoxin M1', 'Arsenic (total)', 'Aflatoxin B1',
+                                    'Arsenic (inorganic)', 'Deoxynivalenol',
+                                    '3-Chloro-1,2-propanediol', 'Ochratoxin A', 'Zearalenone',
+                                    'Hexachlorobenzene', 'Hexachlorocyclohexanes (HCH)',
+                                    'Fumonisin B2', 'Fumonisin B3', 'Pyrrolizidine alkaloids',
+                                    'Methyl mercury'])
 
 
     if st.button("Predict Contaminant Level", key="btn_c"):
-        user_input = {
-    'CountryName': country,
-    'FoodGroupName': foodgroupname,
-    'GEMSFoodName': foodname,
-    'ContaminantName': contaminantname}
-        contaminant_pred = contamination.predict(user_input)
-        st.write(f"Contaminant Level: {contaminant_pred}")
+        user_input = pd.DataFrame({
+                'CountryName': countryName,
+                'FoodGroupName': foodGroupName,
+                'GEMSFoodName': foodname,
+                'ContaminantName': contaminantname
+        })
+        
+        prediction_log = contamination.predict(user_input)
+        prediction_original = np.expm1(prediction_log)[0]
+        st.write(f"Contaminant Level: {prediction_original}")
 
 # Safety Classification Tab
 with tab3:
