@@ -38,9 +38,9 @@ with tab1:
 with tab2:
     st.header("Contaminant Level Prediction")
     country = st.number_input("Enter Country", key="c1")
-    foodgroupname=st.number_input("Enter Food Group", key="c1")
-    foodname= st.number_input("Enter Food Name", key="c2")
-    contaminantname= st.number_input("Enter Contaminant Name", key="c3")
+    foodgroupname=st.number_input("Enter Food Group", key="c2")
+    foodname= st.number_input("Enter Food Name", key="c3")
+    contaminantname= st.number_input("Enter Contaminant Name", key="c4")
 
 
     if st.button("Predict Contaminant Level", key="btn_c"):
