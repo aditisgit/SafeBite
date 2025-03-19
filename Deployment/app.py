@@ -37,25 +37,33 @@ with tab1:
 # Contaminant Level Prediction Tab
 with tab2:
     st.header("Contaminant Level Prediction")
-    feature1 = st.number_input("Enter feature 1", key="c1")
-    feature2 = st.number_input("Enter feature 2", key="c2")
-    feature3 = st.number_input("Enter feature 3", key="c3")
-    feature4 = st.number_input("Enter feature 4", key="c4")
+    country = st.number_input("Enter Country", key="c1")
+    foodgroupname=st.number_input("Enter Food Group", key="c1")
+    foodname= st.number_input("Enter Food Name", key="c2")
+    contaminantname= st.number_input("Enter Contaminant Name", key="c3")
+
 
     if st.button("Predict Contaminant Level", key="btn_c"):
-        user_input = np.array([[feature1, feature2, feature3, feature4]])
+        user_input = {
+    'CountryName': country,
+    'FoodGroupName': foodgroupname,
+    'GEMSFoodName': foodname,
+    'ContaminantName': contaminantname}
         contaminant_pred = contamination.predict(user_input)
         st.write(f"Contaminant Level: {contaminant_pred}")
 
 # Safety Classification Tab
 with tab3:
     st.header("Safety Classification")
-    feature1 = st.number_input("Enter feature 1", key="s1")
-    feature2 = st.number_input("Enter feature 2", key="s2")
-    feature3 = st.number_input("Enter feature 3", key="s3")
-    feature4 = st.number_input("Enter feature 4", key="s4")
+    food_group = st.number_input("Enter Food Group", key="s1")
+    contaminant= st.number_input("Enter Contaminant", key="s2")
+    contaminant_quantity= st.number_input("Enter Quantity of Contaminant", key="s3")
+   
 
     if st.button("Predict Safety", key="btn_s"):
-        user_input = np.array([[feature1, feature2, feature3, feature4]])
+        user_input = {
+    'FoodGroupName': food_group,
+    'Contaminant': contaminant,
+    'ContaminantName': contaminant_quantity}
         safety_pred = safety.predict(user_input)
-        st.write(f"Safety Classification: {'Safe' if safety_pred == 1 else 'Unsafe'}")
+       
