@@ -55,14 +55,14 @@ with tab2:
 # Safety Classification Tab
 with tab3:
     st.header("Safety Classification")
-    food_group = st.number_input("Enter Food Group", key="s1")
+    food_group_name = st.number_input("Enter Food Group", key="s1")
     contaminant= st.number_input("Enter Contaminant", key="s2")
     contaminant_quantity= st.number_input("Enter Quantity of Contaminant", key="s3")
    
 
     if st.button("Predict Safety", key="btn_s"):
         user_input = {
-    'FoodGroupName': food_group,
+    'FoodGroupName': food_group_name,
     'Contaminant': contaminant,
     'ContaminantName': contaminant_quantity}
         safety_pred = safety.predict(user_input)
