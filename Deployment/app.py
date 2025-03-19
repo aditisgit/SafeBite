@@ -1,11 +1,19 @@
 import streamlit as st
 from joblib import load
 import numpy as np
+import os
+
+def find_file(filename, directory="."):
+    for root, _, files in os.walk(directory):
+        if filename in files:
+            return fr"{os.path.join(root, filename)}"  # Return raw string format
+
+    return None  # File not found
 
 # Load saved models
-adulteration = load(r"Deployment\Models\adulteration-prediction-model.joblib") 
-contamination = load(r"Deployment\Models\contamination-prediction-model.joblib")
-safety = load(r"Deployment\Models\safety-classification-kmeans.joblib")
+adulteration = load("" if find_file("adulteration-prediction-model.joblib") is None else find_file("adulteration-prediction-model.joblib"))
+contamination = load("" if find_file("contamination-prediction-model.joblib") is None else find_file("contamination-prediction-model.joblib"))
+safety = load("" if find_file("safety-classification-kmeans.joblib") is None else find_file("safety-classification-kmeans.joblib"))
 
 # Streamlit UI
 st.title("Food Adulteration & Contamination Detection")
