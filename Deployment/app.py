@@ -61,9 +61,6 @@ with tab3:
    
 
     if st.button("Predict Safety", key="btn_s"):
-        user_input = {
-    'FoodGroupName': food_group_name,
-    'Contaminant': contaminant,
-    'ContaminantName': contaminant_quantity}
+        user_input = np.array([[feature1, feature2, feature3, feature4]])
         safety_pred = safety.predict(user_input)
        
