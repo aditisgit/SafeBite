@@ -61,6 +61,6 @@ with tab3:
    
 
     if st.button("Predict Safety", key="btn_s"):
-        user_input = np.array([[feature1, feature2, feature3, feature4]])
+        user_input = np.array([[feature1, feature2, feature3]])
         safety_pred = safety.predict(user_input)
        
