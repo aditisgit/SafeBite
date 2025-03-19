@@ -83,11 +83,10 @@ contaminant = st.selectbox("Select Contaminant", contaminants, key="s2")
 contaminant_quantity= st.number_input("Enter Quantity of Contaminant", key="s3")
    
 
-    if st.button("Predict Safety", key="btn_s"):
+if st.button("Predict Safety", key="btn_s"):
       user_input = {
-    
-    'FoodGroupName': food_group_name,
-    'Contaminant': contaminant,
-    'ContaminantQuantity':contaminant_quantity}
-        safety_pred = safety.predict(user_input)
+     'FoodGroupName': food_group_name,
+     'Contaminant': contaminant,
+     'ContaminantQuantity':contaminant_quantity}
+     safety_pred = safety.predict(user_input)
        
