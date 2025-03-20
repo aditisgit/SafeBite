@@ -81,37 +81,71 @@ with tab2:
         st.write(f"Contaminant Level: {prediction_original}")
 
 # Safety Classification Tab
+import pickle
+
+# Load the trained KMeans model
+with open("safety_model.pkl", "rb") as model_file:
+    safety = pickle.load(model_file)
+
+# Load saved LabelEncoders
+with open("label_encoders.pkl", "rb") as encoder_file:
+    label_encoders = pickle.load(encoder_file)  # Dictionary of encoders
+
+# Load saved StandardScaler
+with open("scaler.pkl", "rb") as scaler_file:
+    scaler = pickle.load(scaler_file)  # StandardScaler instance
+
+
+
+# Define dropdown options
+food_groups = [
+    "Legumes and pulses", "Fish and other seafood (including amphibians, reptiles, snails and insects)",
+    "Vegetables and vegetable products (including fungi)", "Starchy roots and tubers",
+    "Milk and dairy products", "Meat and meat products (including edible offal)",
+    "Fruit and fruit products", "Eggs and egg products"
+]
+
+contaminants = [
+    "Ethyl carbamate", "Other", "Cesium 134", "Cesium 137", "Iodine 131",
+    "Cesium total", "Dioxins (WHO TEFs)", "Dioxin like PCBs (WHO TEFs)", "Lead",
+    "Cadmium", "Aflatoxin (total)", "Aflatoxin G1", "Aflatoxin G2", "Tin",
+    "Aflatoxin B2", "Copper", "Mercury", "Fumonisin B1", "Patulin", "Nitrite",
+    "Aflatoxin M1", "Arsenic (total)", "Aflatoxin B1", "Arsenic (inorganic)",
+    "Deoxynivalenol", "3-Chloro-1,2-propanediol", "Ochratoxin A", "Zearalenone",
+    "Hexachlorobenzene", "Hexachlorocyclohexanes (HCH)", "Fumonisin B2",
+    "Fumonisin B3", "Pyrrolizidine alkaloids", "Methyl mercury"
+]
+
+
 with tab3:
     st.header("Safety Classification")
-    # Define dropdown options
-    food_groups = [
-        "Legumes and pulses",
-        "Fish and other seafood (including amphibians, reptiles, snails and insects)",
-        "Vegetables and vegetable products (including fungi)",
-        "Starchy roots and tubers",
-        "Milk and dairy products",
-        "Meat and meat products (including edible offal)",
-        "Fruit and fruit products",
-        "Eggs and egg products"
-    ]
 
-    contaminants = [
-        "Ethyl carbamate", "Other", "Cesium 134", "Cesium 137", "Iodine 131",
-        "Cesium total", "Dioxins (WHO TEFs)", "Dioxin like PCBs (WHO TEFs)", "Lead",
-        "Cadmium", "Aflatoxin (total)", "Aflatoxin G1", "Aflatoxin G2", "Tin",
-        "Aflatoxin B2", "Copper", "Mercury", "Fumonisin B1", "Patulin", "Nitrite",
-        "Aflatoxin M1", "Arsenic (total)", "Aflatoxin B1", "Arsenic (inorganic)",
-        "Deoxynivalenol", "3-Chloro-1,2-propanediol", "Ochratoxin A", "Zearalenone",
-        "Hexachlorobenzene", "Hexachlorocyclohexanes (HCH)", "Fumonisin B2",
-        "Fumonisin B3", "Pyrrolizidine alkaloids", "Methyl mercury"
-    ]
-
+    # User Inputs
     food_group_name = st.selectbox("Select Food Group", food_groups, key="s1")
     contaminant = st.selectbox("Select Contaminant", contaminants, key="s2")
     contaminant_quantity = st.number_input("Enter Quantity of Contaminant", key="s3")
 
     if st.button("Predict Safety", key="btn_s"):
-        user_input = np.array([[food_group_name, contaminant, contaminant_quantity]])
+        # Encode categorical features using saved LabelEncoders
+        if food_group_name in label_encoders["food_group"].classes_:
+            food_group_encoded = label_encoders["food_group"].transform([food_group_name])[0]
+        else:
+            food_group_encoded = -1  # Handle unseen categories
+
+        if contaminant in label_encoders["contaminant"].classes_:
+            contaminant_encoded = label_encoders["contaminant"].transform([contaminant])[0]
+        else:
+            contaminant_encoded = -1  # Handle unseen categories
+
+        # Prepare input for prediction
+        user_input = np.array([[food_group_encoded, contaminant_encoded, contaminant_quantity]])
+
+        # Scale the numerical feature (contaminant quantity)
+        user_input[:, 2:] = scaler.transform(user_input[:, 2:])
+
+        # Make prediction
         safety_pred = safety.predict(user_input)
+
+        # Display result
         st.write(f"Safety Prediction: {safety_pred}")
-       
+
