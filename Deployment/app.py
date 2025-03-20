@@ -139,4 +139,4 @@ with tab3:
                 result = 'Medium'
             else:
                 result = 'High'
-        st.write(f"Safety Prediction: {safety_pred_in_words(safety_pred[0])}")
+        st.write(f"Safety Prediction: {safety_pred_in_words(safety_pred)}")
