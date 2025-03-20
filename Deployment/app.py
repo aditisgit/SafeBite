@@ -81,29 +81,18 @@ with tab2:
         st.write(f"Contaminant Level: {prediction_original}")
 
 # Safety Classification Tab
-# Load the trained KMeans model using find_file function
-safety_model_path = find_file("safety_model.pkl")
-if safety_model_path:
-    with open(safety_model_path, "rb") as model_file:
-        safety = pickle.load(model_file)
-else:
-    safety = None
+# Load saved KMeans model
+safety_model_path = find_file("safety-classification-kmeans.joblib")
+safety = load(safety_model_path) if safety_model_path else None
 
 # Load saved LabelEncoders
 encoder_path = find_file("label_encoders.pkl")
-if encoder_path:
-    with open(encoder_path, "rb") as encoder_file:
-        label_encoders = pickle.load(encoder_file)  # Dictionary of encoders
-else:
-    label_encoders = None
+label_encoders = load(encoder_path) if encoder_path else None
 
 # Load saved StandardScaler
 scaler_path = find_file("scaler.pkl")
-if scaler_path:
-    with open(scaler_path, "rb") as scaler_file:
-        scaler = pickle.load(scaler_file)  # StandardScaler instance
-else:
-    scaler = None
+scaler = load(scaler_path) if scaler_path else None
+
 
 # Define dropdown options
 food_groups = [
