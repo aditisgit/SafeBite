@@ -74,8 +74,9 @@ with tab2:
                 'FoodGroupName': foodGroupName,
                 'GEMSFoodName': foodname,
                 'ContaminantName': contaminantname
-        })
+        }, index = [0])
         
+        preprocessed_input = contamination.named_steps['preprocessor'].transform(user_input)
         prediction_log = contamination.predict(user_input)
         prediction_original = np.expm1(prediction_log)[0]
         st.write(f"Contaminant Level: {prediction_original}")
