@@ -86,11 +86,14 @@ safety_model_path = find_file("safety-classification-kmeans.joblib")
 safety = load(safety_model_path) if safety_model_path else None
 
 # Load saved LabelEncoders
-encoder_path = find_file("label_encoders.pkl")
-label_encoders = load(encoder_path) if encoder_path else None
+foodgroup_encoder_path = find_file("foodgroup_encoder.joblib")
+label_encoders = load(foodgroup_encoder_path) if foodgroup_encoder_path else None
+
+contaminant_encoder_path = find_file("contaminant_encoder.joblib")
+label_encoders = load(contaminant_encoder_path) if contaminant_encoder_path else None
 
 # Load saved StandardScaler
-scaler_path = find_file("scaler.pkl")
+scaler_path = find_file("result_scaler.joblib")
 scaler = load(scaler_path) if scaler_path else None
 
 
