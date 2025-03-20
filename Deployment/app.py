@@ -18,7 +18,7 @@ safety = load("" if find_file("safety-classification-kmeans.joblib") is None els
 
 #Load encoder and scaler files
 contaminant_encoder = load("" if find_file("contaminant_encoder.joblib") is None else find_file("contaminant_encoder.joblib"))
-foodgroup_encoder = load("" if find_file("foodgroup_encoder .joblib") is None else ("foodgroup_encoder .joblib"))
+foodgroup_encoder = load("" if find_file("foodgroup_encoder.joblib") is None else ("foodgroup_encoder.joblib"))
 result_scaler = load("" if find_file("result_scaler.joblib") is None else find_file("result_scaler.joblib"))
 
 # Streamlit UI
