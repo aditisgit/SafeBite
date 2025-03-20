@@ -127,13 +127,13 @@ with tab3:
     if st.button("Predict Safety", key="btn_s"):
         if safety and label_encoders and scaler:
             # Encode categorical features using saved LabelEncoders
-            if food_group_name in label_encoders["food_group"].classes_:
-                food_group_encoded = label_encoders["food_group"].transform([food_group_name])[0]
+            if food_group_name in label_encoders["FoodGroupName"].classes_:
+                food_group_encoded = label_encoders["FoodGroupName"].transform([food_group_name])[0]
             else:
                 food_group_encoded = -1  # Handle unseen categories
 
-            if contaminant in label_encoders["contaminant"].classes_:
-                contaminant_encoded = label_encoders["contaminant"].transform([contaminant])[0]
+            if contaminant in label_encoders["ContaminantName"].classes_:
+                contaminant_encoded = label_encoders["ContaminantName"].transform([contaminant])[0]
             else:
                 contaminant_encoded = -1  # Handle unseen categories
 
