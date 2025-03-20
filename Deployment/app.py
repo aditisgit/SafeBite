@@ -115,6 +115,6 @@ with tab3:
                 'FoodGroupName': food_group_name,
                'ContaminantName': contaminant,
                 'ResultValue':contaminant_quantity
-        }, index = [0])
+        })
         safety_pred = safety.predict(user_input)
         st.write(f"Safety Prediction: {safety_pred}")
