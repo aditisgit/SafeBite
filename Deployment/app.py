@@ -4,23 +4,29 @@ import numpy as np
 import pandas as pd
 import os
 
-def find_file(filename, directory="."):
+def find_file(filename, directory="Models"):  # Search inside 'Models' folder
     for root, _, files in os.walk(directory):
         if filename in files:
-            return fr"{os.path.join(root, filename)}"  # Return raw string format
+            return os.path.join(root, filename)
 
     return None  # File not found
 
-# Load saved models
-adulteration = load("" if find_file("adulteration-prediction-model.joblib") is None else find_file("adulteration-prediction-model.joblib"))
-contamination = load("" if find_file("contamination-prediction-model.joblib") is None else find_file("contamination-prediction-model.joblib"))
-safety = load("" if find_file("safety-classification-kmeans.joblib") is None else find_file("safety-classification-kmeans.joblib"))
+# Function to safely load models
+def safe_load(filename):
+    file_path = find_file(filename)
+    if file_path is None:
+        raise FileNotFoundError(f"File '{filename}' not found in '{os.path.abspath('Models')}'.")
+    return load(file_path)
 
-#Load encoder and scaler files
-contaminant_encoder = load("" if find_file("contaminant_encoder.joblib") is None else find_file("contaminant_encoder.joblib"))
-foodgroup_encoder = load("" if find_file("foodgroup_encoder.joblib") is None else ("foodgroup_encoder.joblib"))
-result_scaler = load("" if find_file("result_scaler.joblib") is None else find_file("result_scaler.joblib"))
+# Load models safely
+adulteration = safe_load("adulteration-prediction-model.joblib")
+contamination = safe_load("contamination-prediction-model.joblib")
+safety = safe_load("safety-classification-kmeans.joblib")
 
+# Load encoders and scalers safely
+contaminant_encoder = safe_load("contaminant_encoder.joblib")
+foodgroup_encoder = safe_load("foodgroup_encoder.joblib")
+result_scaler = safe_load("result_scaler.joblib")
 # Streamlit UI
 st.title("Food Adulteration & Contamination Detection")
 
