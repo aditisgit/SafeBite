@@ -132,6 +132,7 @@ with tab3:
                         'FoodGroupEncoded': foodgroup_encoder.transform([food_group_name])[0]
         }, index = [0])
         safety_pred = safety.predict(user_input)
+        
         def safety_pred_in_words(safety_pred):
             if safety_pred == 0:
                 result = 'Low'
@@ -139,4 +140,6 @@ with tab3:
                 result = 'Medium'
             else:
                 result = 'High'
-        st.write(f"Safety Prediction: {safety_pred_in_words(safety_pred)}")
+            return result
+
+        st.write(f"Safety Prediction: {safety_pred_in_words(safety_pred[0])}")
