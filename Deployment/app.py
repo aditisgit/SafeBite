@@ -129,7 +129,7 @@ with tab3:
         user_input = pd.DataFrame({
                         'FoodGroupEncoded': foodgroup_encoder.transform(food_group_name)[0],
                         'ContaminantEncoded': contaminant_encoder.transform(contaminant)[0],
-                        'LogResultValue':result_scaler.transform(np.array([[contaminant_quantity]]))
+                        'LogResultValue':result_scaler.transform(np.array([[contaminant_quantity]]))[0][0]
         }, index = [0])
         safety_pred = safety.predict(user_input)
         st.write(f"Safety Prediction: {safety_pred}")
