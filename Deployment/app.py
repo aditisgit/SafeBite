@@ -81,21 +81,29 @@ with tab2:
         st.write(f"Contaminant Level: {prediction_original}")
 
 # Safety Classification Tab
-import pickle
-
-# Load the trained KMeans model
-with open("safety_model.pkl", "rb") as model_file:
-    safety = pickle.load(model_file)
+# Load the trained KMeans model using find_file function
+safety_model_path = find_file("safety_model.pkl")
+if safety_model_path:
+    with open(safety_model_path, "rb") as model_file:
+        safety = pickle.load(model_file)
+else:
+    safety = None
 
 # Load saved LabelEncoders
-with open("label_encoders.pkl", "rb") as encoder_file:
-    label_encoders = pickle.load(encoder_file)  # Dictionary of encoders
+encoder_path = find_file("label_encoders.pkl")
+if encoder_path:
+    with open(encoder_path, "rb") as encoder_file:
+        label_encoders = pickle.load(encoder_file)  # Dictionary of encoders
+else:
+    label_encoders = None
 
 # Load saved StandardScaler
-with open("scaler.pkl", "rb") as scaler_file:
-    scaler = pickle.load(scaler_file)  # StandardScaler instance
-
-
+scaler_path = find_file("scaler.pkl")
+if scaler_path:
+    with open(scaler_path, "rb") as scaler_file:
+        scaler = pickle.load(scaler_file)  # StandardScaler instance
+else:
+    scaler = None
 
 # Define dropdown options
 food_groups = [
@@ -116,7 +124,6 @@ contaminants = [
     "Fumonisin B3", "Pyrrolizidine alkaloids", "Methyl mercury"
 ]
 
-
 with tab3:
     st.header("Safety Classification")
 
@@ -126,26 +133,28 @@ with tab3:
     contaminant_quantity = st.number_input("Enter Quantity of Contaminant", key="s3")
 
     if st.button("Predict Safety", key="btn_s"):
-        # Encode categorical features using saved LabelEncoders
-        if food_group_name in label_encoders["food_group"].classes_:
-            food_group_encoded = label_encoders["food_group"].transform([food_group_name])[0]
+        if safety and label_encoders and scaler:
+            # Encode categorical features using saved LabelEncoders
+            if food_group_name in label_encoders["food_group"].classes_:
+                food_group_encoded = label_encoders["food_group"].transform([food_group_name])[0]
+            else:
+                food_group_encoded = -1  # Handle unseen categories
+
+            if contaminant in label_encoders["contaminant"].classes_:
+                contaminant_encoded = label_encoders["contaminant"].transform([contaminant])[0]
+            else:
+                contaminant_encoded = -1  # Handle unseen categories
+
+            # Prepare input for prediction
+            user_input = np.array([[food_group_encoded, contaminant_encoded, contaminant_quantity]])
+
+            # Scale the numerical feature (contaminant quantity)
+            user_input[:, 2:] = scaler.transform(user_input[:, 2:])
+
+            # Make prediction
+            safety_pred = safety.predict(user_input)
+
+            # Display result
+            st.write(f"Safety Prediction: {safety_pred}")
         else:
-            food_group_encoded = -1  # Handle unseen categories
-
-        if contaminant in label_encoders["contaminant"].classes_:
-            contaminant_encoded = label_encoders["contaminant"].transform([contaminant])[0]
-        else:
-            contaminant_encoded = -1  # Handle unseen categories
-
-        # Prepare input for prediction
-        user_input = np.array([[food_group_encoded, contaminant_encoded, contaminant_quantity]])
-
-        # Scale the numerical feature (contaminant quantity)
-        user_input[:, 2:] = scaler.transform(user_input[:, 2:])
-
-        # Make prediction
-        safety_pred = safety.predict(user_input)
-
-        # Display result
-        st.write(f"Safety Prediction: {safety_pred}")
-
+            st.error("Safety classification model, label encoders, or scaler not found.")
