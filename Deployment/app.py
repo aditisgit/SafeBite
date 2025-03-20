@@ -16,6 +16,11 @@ adulteration = load("" if find_file("adulteration-prediction-model.joblib") is N
 contamination = load("" if find_file("contamination-prediction-model.joblib") is None else find_file("contamination-prediction-model.joblib"))
 safety = load("" if find_file("safety-classification-kmeans.joblib") is None else find_file("safety-classification-kmeans.joblib"))
 
+#Load encoder and scaler files
+contaminant_encoder = load("" if find_file("contaminant_encoder.joblib") is None else find_file("contaminant_encoder.joblib"))
+foodgroup_encoder = load("" if find_file("foodgroup_encoder .joblib") is None else ("foodgroup_encoder .joblib"))
+result_scaler = load("" if find_file("result_scaler.joblib") is None else find_file("result_scaler.joblib"))
+
 # Streamlit UI
 st.title("Food Adulteration & Contamination Detection")
 
@@ -38,34 +43,37 @@ with tab1:
 # Contaminant Level Prediction Tab
 with tab2:
     st.header("Contaminant Level Prediction")
-    countryName = country_name = st.selectbox("Country Name", 
-                                              ['HONG KONG SAR', 'Japan', 'China', 'Singapore', 'Thailand',
-                                                'India', 'Republic of Korea', 'Indonesia'])
     
-    foodGroupName=st.selectbox("Food Group Name",
-                               ['Legumes and pulses',
-                                'Fish and other seafood (including amphibians, reptiles, snails and insects)',
-                                'Vegetables and vegetable products (including fungi)',
-                                'Starchy roots and tubers', 
-                                'Milk and dairy products',
-                                'Meat and meat products (including edible offal)',
-                                'Fruit and fruit products', 
-                                'Eggs and egg products'])
+    #selectbox lists
+    countryNameList = ['HONG KONG SAR', 'Japan', 'China', 'Singapore', 'Thailand',
+                        'India', 'Republic of Korea', 'Indonesia']
     
+    foodGroupNameList = ['Legumes and pulses',
+                        'Fish and other seafood (including amphibians, reptiles, snails and insects)',
+                        'Vegetables and vegetable products (including fungi)',
+                        'Starchy roots and tubers', 
+                        'Milk and dairy products',
+                        'Meat and meat products (including edible offal)',
+                        'Fruit and fruit products', 
+                        'Eggs and egg products']
+    
+    contaminantNameList = ['Ethyl carbamate', 'Other', 'Cesium 134', 'Cesium 137',
+                            'Iodine 131', 'Cesium total', 'Dioxins (WHO TEFs)',
+                            'Dioxin like PCBs (WHO TEFs)', 'Lead', 'Cadmium',
+                            'Aflatoxin (total)', 'Aflatoxin G1', 'Aflatoxin G2', 'Tin',
+                            'Aflatoxin B2', 'Copper', 'Mercury', 'Fumonisin B1', 'Patulin',
+                            'Nitrite', 'Aflatoxin M1', 'Arsenic (total)', 'Aflatoxin B1',
+                            'Arsenic (inorganic)', 'Deoxynivalenol',
+                            '3-Chloro-1,2-propanediol', 'Ochratoxin A', 'Zearalenone',
+                            'Hexachlorobenzene', 'Hexachlorocyclohexanes (HCH)',
+                            'Fumonisin B2', 'Fumonisin B3', 'Pyrrolizidine alkaloids',
+                            'Methyl mercury']
+    
+    #user inputs
+    countryName = country_name = st.selectbox("Country Name", countryNameList, key = "c1")
+    foodGroupName=st.selectbox("Food Group Name", foodGroupNameList, key = "c2")
     foodname= st.text_input("Food Name", key="c3")
-    
-    contaminantname= st.selectbox("Contaminant Name", 
-                                  ['Ethyl carbamate', 'Other', 'Cesium 134', 'Cesium 137',
-                                    'Iodine 131', 'Cesium total', 'Dioxins (WHO TEFs)',
-                                    'Dioxin like PCBs (WHO TEFs)', 'Lead', 'Cadmium',
-                                    'Aflatoxin (total)', 'Aflatoxin G1', 'Aflatoxin G2', 'Tin',
-                                    'Aflatoxin B2', 'Copper', 'Mercury', 'Fumonisin B1', 'Patulin',
-                                    'Nitrite', 'Aflatoxin M1', 'Arsenic (total)', 'Aflatoxin B1',
-                                    'Arsenic (inorganic)', 'Deoxynivalenol',
-                                    '3-Chloro-1,2-propanediol', 'Ochratoxin A', 'Zearalenone',
-                                    'Hexachlorobenzene', 'Hexachlorocyclohexanes (HCH)',
-                                    'Fumonisin B2', 'Fumonisin B3', 'Pyrrolizidine alkaloids',
-                                    'Methyl mercury'])
+    contaminantname= st.selectbox("Contaminant Name", contaminantNameList, key = "c4" )
 
 
     if st.button("Predict Contaminant Level", key="btn_c"):
@@ -113,9 +121,9 @@ with tab3:
 
     if st.button("Predict Safety", key="btn_s"):
         user_input = pd.DataFrame({
-                'FoodGroupName': food_group_name,
-               'ContaminantName': contaminant,
-                'ResultValue':contaminant_quantity
-        })
+                        'FoodGroupEncoded': foodgroup_encoder.transform(food_group_name)[0],
+                        'ContaminantEncoded': contaminant_encoder.transform(contaminant)[0],
+                        'LogResultValue':result_scaler.transform(np.array([[contaminant_quantity]]))
+        }, index = [0])
         safety_pred = safety.predict(user_input)
         st.write(f"Safety Prediction: {safety_pred}")
