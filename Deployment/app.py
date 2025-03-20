@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 import os
 
-def find_file(filename, directory="Models"):  # Search inside 'Models' folder
+def find_file(filename, directory="."): 
     for root, _, files in os.walk(directory):
         if filename in files:
             return os.path.join(root, filename)
