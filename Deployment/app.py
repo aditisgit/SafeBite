@@ -47,7 +47,7 @@ with tab1:
     adulteration_level = st.number_input("Adulteration Level", key="a3")
 
     # Code to insert data into model
-    if st.button("Predict Adulteration", key="btn_c"):
+    if st.button("Predict Adulteration", key="btn_a"):
         user_input = pd.DataFrame({
             'Adulterant': [adulterant],
             'FoodType': [food_type],
